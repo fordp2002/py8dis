@@ -124,7 +124,7 @@ class dfs_gui(acorn_dfs):
             index = node.split()
             temp = len(index)
             if temp == 1:
-                self.disasemble(int(index[0]))
+                self.disassemble(int(index[0]))
             elif temp == 2:
                 self.disassemble(int(index[0]), int(index[1]))
         self.root.config(cursor="")
