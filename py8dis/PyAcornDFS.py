@@ -209,6 +209,17 @@ class acorn_dfs:
                 with open(filename, "wb") as file_p:
                     file_p.write(data)
 
+    def write_dsd(self, index, filename=None):
+        """Write DSD consecutive disks on a MMB"""
+        if index < (len(self.disk_info) + 1):
+            disk = self.disk_info[index]
+            if filename is None:
+                filename = self.get_default_name(f"DIN_{index}_{disk['title']}.dsd")
+            with open(self.filename, "rb") as file_p:
+                data = read_surface(file_p, disk["offset"], DISK_SIZE * 2)
+                with open(filename, "wb") as file_p:
+                    file_p.write(data)
+
     def get_data(self, disk_index, file_index):
         """Write a file from an SSD to disk"""
         disk = self.disk_info[disk_index]

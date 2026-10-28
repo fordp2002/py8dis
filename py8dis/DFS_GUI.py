@@ -100,6 +100,15 @@ class dfs_gui(acorn_dfs):
                 self.write_file(int(index[0]), int(index[1]))
         self.root.config(cursor="")
 
+    def save_dsd(self):
+        """Save dsd images"""
+        for node in self.get_selection():
+            index = node.split()
+            temp = len(index)
+            if temp == 1:
+                self.write_dsd(int(index[0]))
+        self.root.config(cursor="")
+
     def basic(self):
         """Extract Basic"""
         for node in self.get_selection():
@@ -154,6 +163,7 @@ class dfs_gui(acorn_dfs):
         """Popup Menu"""
         self.popup = Menu(self.root, tearoff=0)
         self.popup.add_command(label="Save", command=self.save)
+        self.popup.add_command(label="Save DSD", command=self.save_dsd)
         self.popup.add_command(label="Extract Basic", command=self.basic)
         self.popup.add_command(label="Mode Zero", command=self.mode_zero)
         self.popup.add_command(label="py8dis", command=self.py8_dis)
