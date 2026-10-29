@@ -182,7 +182,7 @@ class acorn_dfs:
             if extension == ".ssd":
                 self.disk_info = read_ssd(filename)
             elif extension == ".dsd":
-                filename = convert_dsd(filename)
+                # ilename = convert_dsd(filename)
                 self.disk_info = read_ssd(filename)
             elif extension == ".mmb":
                 self.disk_info = read_mmb(filename)
