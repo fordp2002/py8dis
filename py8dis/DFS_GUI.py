@@ -179,17 +179,18 @@ class dfs_gui(acorn_dfs):
         tree = Treeview(self.root)
         tree["columns"] = ("Start", "Execute", "Length", "Sector")
         tree.column("#0", width=350)
-        tree.column("Start", width=70)
-        tree.column("Execute", width=70)
-        tree.column("Length", width=70)
-        tree.column("Sector", width=70)
+        col_width = 90
+        tree.column("Start", width=col_width)
+        tree.column("Execute", width=col_width)
+        tree.column("Length", width=col_width)
+        tree.column("Sector", width=col_width)
         tree.heading("Start", text="Start &")
         tree.heading("Execute", text="Execute &")
         tree.heading("Length", text="Length")
         tree.heading("Sector", text="Sector")
         self.make_popup(tree)
         tree.bind("<Button-3>", do_popup)
-        tree.pack(fill=Y, side=LEFT)
+        tree.pack(fill="both", expand=True, side=LEFT)
         return tree
 
     def change_file(self, filename=None):
