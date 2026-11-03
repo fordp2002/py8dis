@@ -1,6 +1,7 @@
+from logging import root
 import os
 from pathlib import Path
-from tkinter import Tk, Menu, Button, Label, filedialog, Y, LEFT, Canvas
+from tkinter import Tk, Menu, Button, Label, filedialog, Y, LEFT, Canvas, PhotoImage
 from tkinter.filedialog import askopenfilename
 from tkinter.ttk import Combobox, Treeview
 from webbrowser import open_new
@@ -31,7 +32,10 @@ class dfs_gui(acorn_dfs):
         self.root = Tk()
         self.set_title()
         self.root.geometry("1024x768")
-        # root.iconbitmap(bitmap=os.path.join(os.path.dirname(__file__), 'Owl.ico'))
+        icon = PhotoImage(
+            file=os.path.join(os.path.dirname(__file__), "dfs_floppy.png")
+        )
+        self.root.iconphoto(False, icon)
         self.make_menu()
         self.tree = self.make_tree()
         # icons = get_icons()
