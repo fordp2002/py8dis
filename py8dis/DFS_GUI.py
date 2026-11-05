@@ -1,10 +1,23 @@
 from logging import root
 import os
 from pathlib import Path
-from tkinter import Tk, Menu, Button, Label, filedialog, Y, LEFT, Canvas, PhotoImage
+from tkinter import (
+    Menu,
+    Button,
+    Label,
+    filedialog,
+    Y,
+    LEFT,
+    Canvas,
+    PhotoImage,
+    messagebox,
+)
 from tkinter.filedialog import askopenfilename
 from tkinter.ttk import Combobox, Treeview
+from tkinterdnd2 import DND_FILES, TkinterDnD
 from webbrowser import open_new
+
+# from configparser import ConfigParser
 
 from PyAcornDFS import acorn_dfs
 
@@ -29,7 +42,7 @@ class dfs_gui(acorn_dfs):
     """GUI for Acorn DFS"""
 
     def __init__(self):
-        self.root = Tk()
+        self.root = TkinterDnD.Tk()
         self.set_title()
         self.root.geometry("1024x768")
         icon = PhotoImage(
@@ -38,6 +51,8 @@ class dfs_gui(acorn_dfs):
         self.root.iconphoto(False, icon)
         self.make_menu()
         self.tree = self.make_tree()
+        self.root.drop_target_register(DND_FILES)
+        self.root.dnd_bind("<<Drop>>", self.on_drop)
         # icons = get_icons()
         self.cursor = "wait" if os.name == "nt" else "clock"
         self.root.mainloop()
@@ -71,6 +86,28 @@ class dfs_gui(acorn_dfs):
         """Get a new file to process"""
         name = get_file()
         self.change_file(name)
+
+    def on_drop(self, event):
+        """Open one dropped DFS image."""
+        filenames = self.root.tk.splitlist(event.data)
+        if not filenames:
+            return
+        if len(filenames) != 1:
+            messagebox.showerror(
+                "Open disk image",
+                "Please drop one disk image at a time.",
+                parent=self.root,
+            )
+            return
+        filename = filenames[0]
+        if Path(filename).suffix.lower() not in (".ssd", ".dsd", ".mmb"):
+            messagebox.showerror(
+                "Open disk image",
+                "Please drop an SSD, DSD, or MMB file.",
+                parent=self.root,
+            )
+            return
+        self.change_file(filename)
 
     def Close(self):
         """Close the file"""

@@ -21,6 +21,19 @@ will probably do the trick. On Windows (warning: I haven't tried this) you proba
 
 `set PYTHONPATH=C:\Users\User\src\py8dis\py8dis`
 
+To set up the DFS GUI and its file drag-and-drop dependency in a project-local
+virtual environment:
+
+```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+PYTHONPATH=py8dis python py8dis/DFS_GUI.py
+```
+
+On Kubuntu, if creating the environment fails because `venv` is unavailable,
+install the system support package with `sudo apt install python3-venv`.
+
 If you see errors like:
 
 `ImportError: No module named ...`

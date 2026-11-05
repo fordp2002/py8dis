@@ -1,4 +1,5 @@
 *.pyc
+.venv/
 examples/build/
 test/
 *.bbprojectd/
