@@ -21,8 +21,8 @@ will probably do the trick. On Windows (warning: I haven't tried this) you proba
 
 `set PYTHONPATH=C:\Users\User\src\py8dis\py8dis`
 
-To set up the DFS GUI and its file drag-and-drop dependency in a project-local
-virtual environment:
+To set up the DFS GUIs and their dependencies in a project-local virtual
+environment:
 
 ```sh
 python3 -m venv .venv
@@ -30,6 +30,25 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 PYTHONPATH=py8dis python py8dis/DFS_GUI.py
 ```
+
+The wxPython version uses native platform widgets and can be launched with:
+
+```sh
+PYTHONPATH=py8dis python py8dis/DFS_WX_GUI.py
+```
+
+Pass a disk image path to open it at startup, including when launching the GUI
+from Dolphin's "Open with" menu:
+
+```sh
+PYTHONPATH=py8dis python py8dis/DFS_WX_GUI.py /path/to/disk.ssd
+```
+
+In the wx GUI, select two SSD images in the Open dialog to load them together as
+a double-sided image. Right-click a disk row and choose "Save DSD" to save the
+pair; if only one side is available, the second side is saved blank.
+
+Use `DFS_GUI.py` instead of `DFS_WX_GUI.py` to launch the Tkinter version.
 
 On Kubuntu, if creating the environment fails because `venv` is unavailable,
 install the system support package with `sudo apt install python3-venv`.

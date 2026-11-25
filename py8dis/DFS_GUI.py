@@ -1,5 +1,6 @@
 from logging import root
 import os
+import sys
 from pathlib import Path
 from tkinter import (
     Menu,
@@ -41,7 +42,7 @@ def About():
 class dfs_gui(acorn_dfs):
     """GUI for Acorn DFS"""
 
-    def __init__(self):
+    def __init__(self, filename=None):
         self.root = TkinterDnD.Tk()
         self.set_title()
         self.root.geometry("1024x768")
@@ -51,6 +52,8 @@ class dfs_gui(acorn_dfs):
         self.root.iconphoto(False, icon)
         self.make_menu()
         self.tree = self.make_tree()
+        if filename:
+            self.change_file(filename)
         self.root.drop_target_register(DND_FILES)
         self.root.dnd_bind("<<Drop>>", self.on_drop)
         # icons = get_icons()
@@ -87,6 +90,17 @@ class dfs_gui(acorn_dfs):
         name = get_file()
         self.change_file(name)
 
+    def add_file(self, filename):
+        """add a file to a disk"""
+        result = False
+        for node in self.get_selection():
+            index = node.split()
+            temp = len(index)
+            if temp == 1:
+                result = self.add_file(filename)
+        self.root.config(cursor="")
+        return
+
     def on_drop(self, event):
         """Open one dropped DFS image."""
         filenames = self.root.tk.splitlist(event.data)
@@ -100,14 +114,15 @@ class dfs_gui(acorn_dfs):
             )
             return
         filename = filenames[0]
-        if Path(filename).suffix.lower() not in (".ssd", ".dsd", ".mmb"):
-            messagebox.showerror(
-                "Open disk image",
-                "Please drop an SSD, DSD, or MMB file.",
-                parent=self.root,
-            )
-            return
-        self.change_file(filename)
+        if Path(filename).suffix.lower() in (".ssd", ".dsd", ".mmb"):
+            self.change_file(filename)
+        else:
+            if not self.add_file(self, filename):
+                messagebox.showerror(
+                    "File not added",
+                    "Please drop a suitable file.",
+                    parent=self.root,
+                )
 
     def Close(self):
         """Close the file"""
@@ -236,6 +251,11 @@ class dfs_gui(acorn_dfs):
 
     def change_file(self, filename=None):
         """Add a device to the tree"""
+        expand_initial_ssd = (
+            not getattr(self, "disk_info", None)
+            and filename
+            and Path(filename).suffix.lower() == ".ssd"
+        )
         for child in self.tree.get_children():
             self.tree.delete(child)
         self.open_image(filename)
@@ -251,6 +271,8 @@ class dfs_gui(acorn_dfs):
                         text=f"Disk {disk_index}: {disk['title']}",
                         values=detail,
                     )
+                    if expand_initial_ssd:
+                        self.tree.item(dev, open=True)
                     for file_index, info in enumerate(disk["file_info"]):
                         columns = (
                             f"{info['load_&']:08X}",
@@ -267,4 +289,12 @@ class dfs_gui(acorn_dfs):
                         )
 
 
-dfs_gui()
+def main(argv=None):
+    """Start the GUI, optionally opening a disk image passed on the command line."""
+    if argv is None:
+        argv = sys.argv[1:]
+    dfs_gui(argv[0] if argv else None)
+
+
+if __name__ == "__main__":
+    main()

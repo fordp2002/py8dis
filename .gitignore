@@ -3,3 +3,4 @@
 examples/build/
 test/
 *.bbprojectd/
+*.ssd
